@@ -100,8 +100,9 @@ public class CameraSmoothFollow : MonoBehaviour {
 		yDeg = ClampAngle (yDeg, yMinLimit, yMaxLimit);
 		
 		// Set camera rotation
-		Quaternion rotation = Quaternion.Euler (VerticalAngle, xDeg, 0);
-		
+		//Quaternion rotation = Quaternion.Euler (VerticalAngle, xDeg, 0); // Dynamic Rotation
+		Quaternion rotation = Quaternion.Euler (VerticalAngle, 0, 0); // Dynamic Rotation
+
 		// Calculate the desired distance
 		if(enableZoom)
 			desiredDistance -= Input.GetAxis ("Mouse ScrollWheel") * Time.deltaTime * zoomRate * Mathf.Abs (desiredDistance);

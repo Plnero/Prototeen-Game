@@ -51,9 +51,6 @@
      <Compile Include="Assets\Resources\Scripts\Player\InputController.cs" />
      <Compile Include="Assets\Resources\Scripts\Player\MovementController.cs" />
      <Compile Include="Assets\Resources\Scripts\Player\PlayerStatus.cs" />
- <Reference Include="Assembly-UnityScript-firstpass">
- <HintPath>C:/Users/Administrator/Documents/Respaldo/Trabajos Unity en Desarrollo/Prototeen Action Game/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
- </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

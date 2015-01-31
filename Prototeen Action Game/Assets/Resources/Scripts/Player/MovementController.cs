@@ -61,6 +61,7 @@ public class MovementController : MonoBehaviour {
 	/// <param name="movementInput">Movement input.</param>
 	public void TryMovement(Vector2 movementInput,bool walking)
 	{
+		/* Camera-based movement
 		// Forward vector relative to the camera along the x-z plane	
 		Vector3 forward = Camera.main.transform.TransformDirection(Vector3.forward);
 		forward.y = 0;
@@ -72,6 +73,10 @@ public class MovementController : MonoBehaviour {
 
 		// Target direction relative to the camera
 		_moveDirection = movementInput.x * right + movementInput.y * forward;
+		*/
+
+		// Set movement direction based on input
+		_moveDirection = new Vector3 (movementInput.x, 0, movementInput.y);
 
 		// Get Current movement speed
 		_currentMovementSpeed = walking ? walkSpeed : runSpeed;
