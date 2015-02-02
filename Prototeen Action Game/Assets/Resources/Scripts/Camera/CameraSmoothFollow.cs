@@ -20,7 +20,10 @@ public class CameraSmoothFollow : MonoBehaviour {
 	public LayerMask collisionLayers = -1;     // What the camera will collide with
 	public bool lockToRearOfTarget = false;             // Lock camera to rear of target
 	public float VerticalAngle = 35.0f;
-	
+
+	public bool allowMouseInputX = true;
+	public bool allowMouseInputY = false;
+
 	private float xDeg = 0.0f;
 	private float yDeg = 0.0f;
 	private float currentDistance;
@@ -30,14 +33,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 	private bool mouseSideButton = false;  
 	private float pbuffer = 0.0f;       //Cooldownpuffer for SideButtons
 	private float coolDown = 0.5f;      //Cooldowntime for SideButtons 
-	
-	// Shake parameters
-	public float shakeDuration = 1.5f;
-	public float shakeStrenght = 1.0f;
-	public int shakeVibrato = 10;
-	public float shakeRandomness = 90.0f;
-	private bool collisionShaken = false;
-	
+
 	void Start ()
 	{      
 		if (transform.parent != null)
@@ -61,6 +57,9 @@ public class CameraSmoothFollow : MonoBehaviour {
 	//Only Move camera after everything else has been updated
 	void LateUpdate ()
 	{
+		// Local variables
+		Vector3 vTargetOffset;
+
 		// Don't do anything if target is not defined
 		if (target == null)
 			return;
@@ -68,13 +67,24 @@ public class CameraSmoothFollow : MonoBehaviour {
 		if(pbuffer>0)
 			pbuffer -=Time.deltaTime;
 		if(pbuffer<0)pbuffer=0;
-		
-		Vector3 vTargetOffset;
+
+		//Check to see if mouse input is allowed on the axis
+		if (allowMouseInputX)
+			xDeg += Input.GetAxis ("Mouse X") * xSpeed * 0.02f;
+		else
+			RotateBehindTarget();
+		if (allowMouseInputY)
+			yDeg -= Input.GetAxis ("Mouse Y") * ySpeed * 0.02f;
+		//Interrupt rotating behind if mouse wants to control rotation
+		if (!lockToRearOfTarget)
+			rotateBehind = false;
+
+		// Set target Y rotation
 		yDeg = ClampAngle (yDeg, yMinLimit, yMaxLimit);
 		
 		// Set camera rotation
-		//Quaternion rotation = Quaternion.Euler (VerticalAngle, xDeg, 0); // Dynamic Rotation
-		Quaternion rotation = Quaternion.Euler (VerticalAngle, 0, 0); // Dynamic Rotation
+		//Quaternion rotation = Quaternion.Euler (VerticalAngle, xDeg, yDeg); // Dynamic Rotation
+		Quaternion rotation = Quaternion.Euler (VerticalAngle, xDeg, 0); // Dynamic Rotation
 
 		// Calculate the desired distance
 		if(enableZoom)
@@ -101,13 +111,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 			correctedDistance = Vector3.Distance (trueTargetPosition, collisionHit.point) - offsetFromWall;
 			isCorrected = true;
 		}
-		else
-		{
-			// Set collision flag
-			if(transform.parent != null && collisionShaken)
-				collisionShaken = false;
-		}
-		
+
 		// For smoothing, lerp distance only if either distance wasn't corrected, or correctedDistance is more than currentDistance
 		currentDistance = !isCorrected || correctedDistance > currentDistance ? Mathf.Lerp (currentDistance, correctedDistance, Time.deltaTime * zoomDampening) : 
 			Mathf.Lerp (currentDistance, correctedDistance, Time.deltaTime * zoomCollisionDampening);
