@@ -19,8 +19,6 @@ public class CameraSmoothFollow : MonoBehaviour {
 	public float zoomCollisionDampening = 20.0f;		   // Collision Auto Zoom Speed
 	public LayerMask collisionLayers = -1;     // What the camera will collide with
 	public bool lockToRearOfTarget = false;             // Lock camera to rear of target
-	public bool allowMouseInputX = true;                // Allow player to control camera angle on the X axis (Left/Right)
-	public bool allowMouseInputY = true;                // Allow player to control camera angle on the Y axis (Up/Down)
 	public float VerticalAngle = 35.0f;
 	
 	private float xDeg = 0.0f;
@@ -72,31 +70,6 @@ public class CameraSmoothFollow : MonoBehaviour {
 		if(pbuffer<0)pbuffer=0;
 		
 		Vector3 vTargetOffset;
-		
-		// If either mouse buttons are down, let the mouse govern camera position
-		if (GUIUtility.hotControl == 0)
-		{
-			if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
-			{
-				//Check to see if mouse input is allowed on the axis
-				if (allowMouseInputX)
-					xDeg += Input.GetAxis ("Mouse X") * xSpeed * 0.02f;
-				else
-					RotateBehindTarget();
-				if (allowMouseInputY)
-					yDeg -= Input.GetAxis ("Mouse Y") * ySpeed * 0.02f;
-				
-				//Interrupt rotating behind if mouse wants to control rotation
-				if (!lockToRearOfTarget)
-					rotateBehind = false;
-			}
-			
-			// otherwise, ease behind the target if any of the directional keys are pressed
-			else if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0 || rotateBehind || mouseSideButton)
-			{
-				RotateBehindTarget();
-			}
-		}
 		yDeg = ClampAngle (yDeg, yMinLimit, yMaxLimit);
 		
 		// Set camera rotation
