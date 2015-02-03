@@ -1,8 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\Camera\CameraSmoothFollow.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\Player\InputController.cs">
     <Files>
-      <File FileName="Assets\Resources\Scripts\Camera\CameraSmoothFollow.cs" Line="27" Column="32" />
+      <File FileName="Assets\Resources\Scripts\Player\InputController.cs" Line="66" Column="58" />
+      <File FileName="Assets\Resources\Scripts\Player\PlayerStatus.cs" Line="4" Column="44" />
+      <File FileName="Assets\Resources\Scripts\Camera\CameraSmoothFollow.cs" Line="4" Column="32" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

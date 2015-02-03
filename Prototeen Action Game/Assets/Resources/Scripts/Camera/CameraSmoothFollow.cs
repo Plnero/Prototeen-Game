@@ -2,6 +2,17 @@
 using System.Collections;
 
 public class CameraSmoothFollow : MonoBehaviour {
+	// Singleton
+	static private CameraSmoothFollow _instance;
+	static public CameraSmoothFollow Instance
+	{
+		get{return _instance;}
+	}
+	CameraSmoothFollow()
+	{
+		_instance = this;
+	}
+
 	public GameObject target;                           // Target to follow
 	public float targetHeight = 1.7f;                         // Vertical offset adjustment
 	public float distance = 12.0f;                            // Default Distance
@@ -53,6 +64,19 @@ public class CameraSmoothFollow : MonoBehaviour {
 		if (lockToRearOfTarget)
 			rotateBehind = true;
 	}
+
+	/// <summary>
+	/// Sets the look axis.
+	/// </summary>
+	/// <param name="Axis">Axis.</param>
+	public void SetLookAxis(Vector2 Axis)
+	{
+		//Check to see if mouse input is allowed on the axis
+		if (allowMouseInputX)
+			xDeg += Axis.x * xSpeed * 0.02f;
+		if (allowMouseInputY)
+			yDeg -= Axis.y * ySpeed * 0.02f;
+	}
 	
 	//Only Move camera after everything else has been updated
 	void LateUpdate ()
@@ -68,13 +92,6 @@ public class CameraSmoothFollow : MonoBehaviour {
 			pbuffer -=Time.deltaTime;
 		if(pbuffer<0)pbuffer=0;
 
-		//Check to see if mouse input is allowed on the axis
-		if (allowMouseInputX)
-			xDeg += Input.GetAxis ("Mouse X") * xSpeed * 0.02f;
-		else
-			RotateBehindTarget();
-		if (allowMouseInputY)
-			yDeg -= Input.GetAxis ("Mouse Y") * ySpeed * 0.02f;
 		//Interrupt rotating behind if mouse wants to control rotation
 		if (!lockToRearOfTarget)
 			rotateBehind = false;

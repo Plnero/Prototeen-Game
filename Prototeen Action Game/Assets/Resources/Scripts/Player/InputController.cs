@@ -7,7 +7,6 @@ public class InputController : MonoBehaviour {
 
 	// Connected Gamepads
 	public string[] GamePads;
-	private int ConectedGamepads = 0;
 
 	// Keyboard default movement keys (later move this to a specialized class)
 	public KeyCode Forward = KeyCode.W;
@@ -25,6 +24,7 @@ public class InputController : MonoBehaviour {
 
 	// Movement input
 	private Vector2 _movementInput;
+	private Vector2 _cameraInput;
 
 	// Use this for initialization
 	public void Initialize (MovementController movement) {
@@ -32,6 +32,7 @@ public class InputController : MonoBehaviour {
 		_movement = movement;
 
 		// Detect Gamepad presence
+		DetectGamepad ();
 		Invoke("DetectGamepad", 1);
 	}
 
@@ -41,7 +42,6 @@ public class InputController : MonoBehaviour {
 	void DetectGamepad()
 	{
 		GamePads = Input.GetJoystickNames ();
-		ConectedGamepads = GamePads.Length;
 	}
 
 	// Update is called once per frame
@@ -61,6 +61,9 @@ public class InputController : MonoBehaviour {
 		// Send movement vector
 		if(_movementInput.magnitude > 0)
 			_movement.TryMovement(_movementInput,_walking);
+
+		// Send camera vector
+		CameraSmoothFollow.Instance.SetLookAxis (_cameraInput);
 	}
 
 	/// <summary>
@@ -69,7 +72,7 @@ public class InputController : MonoBehaviour {
 	void CatchGameplayInput()
 	{
 		// Catch Keyboard movement
-		if(ConectedGamepads == 0)
+		if(GamePads.Length == 0)
 			CatchKeyboardMovementInput();
 		// Catch Gamepad movement
 		else
@@ -97,6 +100,9 @@ public class InputController : MonoBehaviour {
 		_movementInput.x += _left? 	   -1 : 0;
 		_movementInput.y += _forward? 	1 : 0;
 		_movementInput.y += _backward? -1 : 0;
+
+		// Set camera input
+		_cameraInput = new Vector2 (Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
 	}
 	
 	/// <summary>
@@ -106,5 +112,8 @@ public class InputController : MonoBehaviour {
 	{
 		// Catch axis input
 		_movementInput = new Vector2(Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical"));
+
+		// Set camera input
+		_cameraInput = new Vector2 (Input.GetAxis ("Horizontal R"),0);
 	}
 }
