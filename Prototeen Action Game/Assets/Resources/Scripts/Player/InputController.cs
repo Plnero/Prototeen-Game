@@ -113,7 +113,11 @@ public class InputController : MonoBehaviour {
 		// Catch axis input
 		_movementInput = new Vector2(Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical"));
 
-		// Set camera input
-		_cameraInput = new Vector2 (Input.GetAxis ("Horizontal R"),0);
+		// First try to get the mouse input, if there is, it will be the listened one
+		_cameraInput = new Vector2 (Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
+		// Otherwise, get the gamepad input
+		if(_cameraInput.magnitude == 0)
+			// Set camera input
+			_cameraInput = new Vector2 (Input.GetAxis ("Horizontal R"),0);
 	}
 }
