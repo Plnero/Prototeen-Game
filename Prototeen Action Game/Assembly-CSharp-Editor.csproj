@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{16C1F320-6C2B-6E62-20A1-0D97EF81D19A}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+	<BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_5;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="System.Xml.Linq" />
+	<Reference Include="UnityEngine">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Root Motion\FinalIK\BipedIK\Editor\BipedIKInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\BipedIK\Editor\BipedIKSolversInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\Constraints\Editor\ConstraintsInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Components\Editor\AimIKInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Components\Editor\CCDIKInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Components\Editor\FABRIKInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Components\Editor\FABRIKRootInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Components\Editor\FullBodyBipedIKInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Components\Editor\IKInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Components\Editor\LimbIKInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Components\Editor\LookAtIKInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Components\Editor\TrigonometricIKInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKEffectorInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKSolverAimInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKSolverFABRIKRootInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKSolverFullBodyBipedInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKSolverFullBodyInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKSolverHeuristicInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKSolverInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKSolverLimbInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKSolverLookAtInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\IK Solvers\Editor\IKSolverTrigonometricInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\InteractionSystem\Editor\InteractionTargetInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\InteractionSystem\Editor\InteractionTriggerInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\Rotation Limits\Editor\RotationLimitAngleInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\Rotation Limits\Editor\RotationLimitHingeInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\Rotation Limits\Editor\RotationLimitInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\Rotation Limits\Editor\RotationLimitPolygonalInspector.cs" />
+     <Compile Include="Assets\Root Motion\FinalIK\Rotation Limits\Editor\RotationLimitSplineInspector.cs" />
+     <Compile Include="Assets\Root Motion\Scripts\Editor\BipedReferencesInspector.cs" />
+     <Compile Include="Assets\Root Motion\Scripts\Editor\Inspector.cs" />
+     <Compile Include="Assets\Root Motion\Scripts\Editor\SerializedContent.cs" />
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{9C601550-5C39-142D-CE92-C196D2E0778A}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
