@@ -6,6 +6,7 @@ public class AnimationController : MonoBehaviour {
 	private Animator _animator;
 
 	// Player animation parameters
+	[System.NonSerialized]
 	public float CurrentMovementSpeed = 0;
 
 	// Use this for initialization
