@@ -22,6 +22,8 @@ public class MovementController : MonoBehaviour {
 
 	// CyberSprint Variables
 	public float CyberSprintOffset = 0.6f;
+	[Range(0,360)]
+	public float AngleThreshold = 150.0f;
 
 	// Raycast variables
 	private RaycastHit _hit;
@@ -77,7 +79,7 @@ public class MovementController : MonoBehaviour {
 		{
 			// Check if the surface is a cybersprint surface
 			if(_hit.collider.gameObject.GetComponent<CyberSprintSurface>() && 
-			   Vector3.Angle(_hit.normal,transform.forward) > 150.0f)
+			   Vector3.Angle(_hit.normal,transform.forward) > AngleThreshold)
 			{
 				Debug.Log("CYBERSPRINT SURFACE, COLLSION ANGLE: " + Vector3.Angle(_hit.normal,transform.forward));
 				key = true;
