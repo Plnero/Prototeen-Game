@@ -81,6 +81,9 @@ public class CameraSmoothFollow : MonoBehaviour {
 	//Only Move camera after everything else has been updated
 	void LateUpdate ()
 	{
+		// DEBUG
+		transform.parent.up = target.transform.up;
+
 		// Local variables
 		Vector3 vTargetOffset;
 
@@ -88,8 +91,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 		if (target == null)
 			return;
 		//pushbuffer
-		if(pbuffer>0)
-			pbuffer -=Time.deltaTime;
+		if(pbuffer>0)pbuffer -=Time.deltaTime;
 		if(pbuffer<0)pbuffer=0;
 
 		//Interrupt rotating behind if mouse wants to control rotation
@@ -140,7 +142,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 		
 		//Finally Set rotation and position of camera
 		transform.rotation = rotation;
-		transform.localPosition = position;
+		transform.position = position;
 	}
 	
 	private void RotateBehindTarget()

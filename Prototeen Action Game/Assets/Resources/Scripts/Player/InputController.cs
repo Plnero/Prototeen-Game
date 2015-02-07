@@ -14,6 +14,7 @@ public class InputController : MonoBehaviour {
 	public KeyCode Left = KeyCode.A;
 	public KeyCode Right = KeyCode.D;
 	public KeyCode Walking = KeyCode.LeftAlt;
+	public KeyCode CyberSprint = KeyCode.LeftShift;
 
 	// Player input
 	private bool _forward;
@@ -21,6 +22,7 @@ public class InputController : MonoBehaviour {
 	private bool _left;
 	private bool _right;
 	private bool _walking;
+	private bool _cyberSprint;
 
 	// Movement input
 	private Vector2 _movementInput;
@@ -60,7 +62,7 @@ public class InputController : MonoBehaviour {
 	{
 		// Send movement vector
 		if(_movementInput.magnitude > 0)
-			_movement.TryMovement(_movementInput,_walking);
+			_movement.TryMovement(_movementInput,_walking,_cyberSprint);
 
 		// Send camera vector
 		CameraSmoothFollow.Instance.SetLookAxis (_cameraInput);
@@ -79,7 +81,8 @@ public class InputController : MonoBehaviour {
 			CatchGamepadMovementInput();
 
 		// Get Movement Type Input
-		_walking	= Input.GetKey (Walking);
+		_walking	 = Input.GetKey (Walking);
+		_cyberSprint = Input.GetKey (CyberSprint) || Input.GetButton ("CyberSprint");
 	}
 
 	
