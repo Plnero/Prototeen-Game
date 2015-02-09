@@ -66,6 +66,15 @@ public class CameraSmoothFollow : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Sets the camera behid player.
+	/// </summary>
+	public void SetCameraBehidPlayer()
+	{
+		xDeg = target.transform.eulerAngles.y;
+		ExecuteCameraTranslation ();
+	}
+
+	/// <summary>
 	/// Sets the look axis.
 	/// </summary>
 	/// <param name="Axis">Axis.</param>
@@ -81,29 +90,35 @@ public class CameraSmoothFollow : MonoBehaviour {
 	//Only Move camera after everything else has been updated
 	void LateUpdate ()
 	{
+		ExecuteCameraTranslation ();
+	}
+
+
+	private void ExecuteCameraTranslation()
+	{
 		// DEBUG
 		transform.parent.up = target.transform.up;
-
+		
 		// Local variables
 		Vector3 vTargetOffset;
-
+		
 		// Don't do anything if target is not defined
 		if (target == null)
 			return;
 		//pushbuffer
 		if(pbuffer>0)pbuffer -=Time.deltaTime;
 		if(pbuffer<0)pbuffer=0;
-
+		
 		//Interrupt rotating behind if mouse wants to control rotation
 		if (!lockToRearOfTarget)
 			rotateBehind = false;
-
+		
 		// Set target Y rotation
 		yDeg = ClampAngle (yDeg, yMinLimit, yMaxLimit);
 		
 		// Set camera rotation
 		Quaternion rotation = Quaternion.Euler (VerticalAngle, xDeg, 0); // Dynamic Rotation
-
+		
 		// Calculate the desired distance
 		if(enableZoom)
 			desiredDistance -= Input.GetAxis ("Mouse ScrollWheel") * Time.deltaTime * zoomRate * Mathf.Abs (desiredDistance);
@@ -129,7 +144,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 			correctedDistance = Vector3.Distance (trueTargetPosition, collisionHit.point) - offsetFromWall;
 			isCorrected = true;
 		}
-
+		
 		// For smoothing, lerp distance only if either distance wasn't corrected, or correctedDistance is more than currentDistance
 		currentDistance = !isCorrected || correctedDistance > currentDistance ? Mathf.Lerp (currentDistance, correctedDistance, Time.deltaTime * zoomDampening) : 
 			Mathf.Lerp (currentDistance, correctedDistance, Time.deltaTime * zoomCollisionDampening);
@@ -144,6 +159,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 		transform.rotation = rotation;
 		transform.position = position;
 	}
+
 	
 	private void RotateBehindTarget()
 	{

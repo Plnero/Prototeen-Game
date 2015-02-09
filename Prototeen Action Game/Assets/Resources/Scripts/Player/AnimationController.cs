@@ -25,6 +25,7 @@ public class AnimationController : MonoBehaviour {
 		// Start Cyber Sprint
 		if (!inCyberSprint && status) {
 			_animator.SetTrigger("CyberSprint_Trigger");
+			Debug.Log("TRIGGER");
 		}
 
 		// Set Cyber Sprint Status

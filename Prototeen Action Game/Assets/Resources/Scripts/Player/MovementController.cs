@@ -119,6 +119,9 @@ public class MovementController : MonoBehaviour {
 
 				// Set cyber sprint flag
 				inCyberSprintSurface = true;
+
+				// Set Camera behind the player
+				CameraSmoothFollow.Instance.SetCameraBehidPlayer();
 			}
 		}
 
