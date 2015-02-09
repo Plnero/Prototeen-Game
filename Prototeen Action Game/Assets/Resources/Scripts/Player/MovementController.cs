@@ -21,10 +21,15 @@ public class MovementController : MonoBehaviour {
 	private Vector3 _surfaceNormal = Vector3.up;
 
 	// CyberSprint Variables
+	[Range(1,100)]
+	public float CyberSprintSpeedMultiplier = 2;
 	public float CyberSprintOffset = 0.6f;
 	[Range(0,360)]
 	public float AngleThreshold = 150.0f;
-	public bool inCyberSprint = false;
+	public bool inCyberSprintSurface = false;
+	[Range(0,10.0f)]
+	public float TimeToFallToGround = 1.0f;
+	private bool _waitingToFall = false;
 
 	// Raycast variables
 	private RaycastHit _hit;
@@ -47,6 +52,13 @@ public class MovementController : MonoBehaviour {
 	{
 		// Update the player animator
 		_animation.CurrentMovementSpeed = _moveDirection.magnitude > 0 ? _currentMovementSpeed : 0;
+
+		// Deactivate cyber sprint if the player isn't moving
+		if(_moveDirection.magnitude == 0)
+		{
+			_animation.SetCyberSprint(false);
+			CheckCyberSprintFall(false);
+		}
 
 		// Execute the calculated movement
 		ExecuteMovement ();
@@ -76,6 +88,12 @@ public class MovementController : MonoBehaviour {
 	/// <param name="Direction">Direction.</param>
 	private void CheckCyberSprint(Vector3 moveDirection, bool CyberSprintInput)
 	{
+		// Check if there is movement input. if not, cancel cyber sprint
+		if(_moveDirection.magnitude == 0)CyberSprintInput = false;
+
+		// Set Cyber Sprint animation
+		_animation.SetCyberSprint (CyberSprintInput);
+
 		// Align yourself to hit.normal as up
 		if(CyberSprintInput &&
 		   Physics.Raycast(transform.position, moveDirection.normalized, out _hit,CyberSprintCheckDistance)) 
@@ -100,28 +118,31 @@ public class MovementController : MonoBehaviour {
 				transform.position += transform.forward * CyberSprintOffset;
 
 				// Set cyber sprint flag
-				inCyberSprint = true;
+				inCyberSprintSurface = true;
 			}
 		}
-	
+
+		// Check cyber sprint
+		CheckCyberSprintFall (CyberSprintInput);
+	}
+
+	/// <summary>
+	/// Checks the cyber sprint fall.
+	/// </summary>
+	void CheckCyberSprintFall( bool CyberSprintInput)
+	{
 		// If the player dropped the cyber sprint, restore walk normal
-		if(!CyberSprintInput)
+		if(!CyberSprintInput && !_waitingToFall)
 		{
-			// Gravity Normal
-			_surfaceNormal = Vector3.up;
-
-			// Find forward direction with new myNormal:
-			Vector3 myForward = Vector3.Cross(transform.right, _surfaceNormal);
-
-			// Align character to the new myNormal while keeping the forward direction:
-			Quaternion targetRot = Quaternion.LookRotation(myForward, _surfaceNormal);
-			transform.rotation = targetRot;
-
-			// Remove Cyber Sprint Flag
-			inCyberSprint = false;
-
-			// Debug
-			key = false;
+			_waitingToFall = true;
+			StopCoroutine("FallToGround");
+			StartCoroutine("FallToGround");
+		}
+		// Otherwise. if the player continued moving, stop the timer
+		else if (CyberSprintInput && _waitingToFall)
+		{
+			_waitingToFall = false;
+			StopCoroutine("FallToGround");
 		}
 	}
 
@@ -145,7 +166,8 @@ public class MovementController : MonoBehaviour {
 		_moveDirection = movementInput.x * right + movementInput.y * forward;
 
 		// Get Current movement speed
-		_currentMovementSpeed = walking ? walkSpeed : runSpeed;
+		_currentMovementSpeed = CyberSprint ? CyberSprintSpeedMultiplier * runSpeed: 
+								walking ? walkSpeed : runSpeed;
 
 		// Check for cyber sprint
 		CheckCyberSprint (_moveDirection,CyberSprint);
@@ -158,6 +180,34 @@ public class MovementController : MonoBehaviour {
 
 		// Rotate towards movement direction
 		transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(_moveDirection),rotateSpeed * Time.deltaTime);
+	}
+
+	
+	/// <summary>
+	/// Falls to the ground.
+	/// </summary>
+	/// <returns>The to ground.</returns>
+	IEnumerator FallToGround()
+	{
+		// Start Timer
+		yield return new WaitForSeconds (TimeToFallToGround);
+		
+		// Gravity Normal
+		_surfaceNormal = Vector3.up;
+		
+		// Find forward direction with new myNormal:
+		Vector3 myForward = Vector3.Cross(transform.right, _surfaceNormal);
+		
+		// Align character to the new myNormal while keeping the forward direction:
+		Quaternion targetRot = Quaternion.LookRotation(myForward, _surfaceNormal);
+		transform.rotation = targetRot;
+		
+		// Remove Cyber Sprint Flag
+		inCyberSprintSurface = false;
+		_waitingToFall = false;
+		
+		// Debug
+		key = false;
 	}
 
 }
