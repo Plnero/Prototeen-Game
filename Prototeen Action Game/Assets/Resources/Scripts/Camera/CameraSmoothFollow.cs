@@ -14,6 +14,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 	}
 
 	public GameObject target;                           // Target to follow
+	private MovementController _targetMovement;			// Movement Script
 	public float targetHeight = 1.7f;                         // Vertical offset adjustment
 	public float distance = 12.0f;                            // Default Distance
 	public float offsetFromWall = 0.1f;                       // Bring camera away from any colliding objects
@@ -21,8 +22,6 @@ public class CameraSmoothFollow : MonoBehaviour {
 	public float minDistance = 0.6f;                      // Minimum zoom Distance
 	public float xSpeed = 200.0f;                             // Orbit speed (Left/Right)
 	public float ySpeed = 200.0f;                             // Orbit speed (Up/Down)
-	public float yMinLimit = -80f;                            // Looking up limit
-	public float yMaxLimit = 80f;                             // Looking down limit
 	public bool enableZoom = false;
 	public float zoomRate = 40f;                          // Zoom Speed
 	public float rotationDampening = 3.0f;                // Auto Rotation speed (higher = faster)
@@ -45,11 +44,16 @@ public class CameraSmoothFollow : MonoBehaviour {
 	private float pbuffer = 0.0f;       //Cooldownpuffer for SideButtons
 	private float coolDown = 0.5f;      //Cooldowntime for SideButtons 
 
+	public Vector3 CustomForwardVector = Vector3.forward;
+
 	void Start ()
 	{      
 		if (transform.parent != null)
 			transform.parent.position = Vector3.zero;
-		
+
+		if(target.GetComponent<MovementController>() != null)
+			_targetMovement = target.GetComponent<MovementController>();
+
 		Vector3 angles = transform.eulerAngles;
 		xDeg = angles.x;
 		yDeg = angles.y;
@@ -96,8 +100,8 @@ public class CameraSmoothFollow : MonoBehaviour {
 
 	private void ExecuteCameraTranslation()
 	{
-		// DEBUG
-		transform.parent.up = target.transform.up;
+		// Get Target Normal
+		Vector3 TargetNormal = target.transform.up;
 		
 		// Local variables
 		Vector3 vTargetOffset;
@@ -108,20 +112,16 @@ public class CameraSmoothFollow : MonoBehaviour {
 		//pushbuffer
 		if(pbuffer>0)pbuffer -=Time.deltaTime;
 		if(pbuffer<0)pbuffer=0;
-		
+
 		//Interrupt rotating behind if mouse wants to control rotation
-		if (!lockToRearOfTarget)
-			rotateBehind = false;
-		
-		// Set target Y rotation
-		yDeg = ClampAngle (yDeg, yMinLimit, yMaxLimit);
-		
+		if (!lockToRearOfTarget)rotateBehind = false;
+
 		// Set camera rotation
-		Quaternion rotation = Quaternion.Euler (VerticalAngle, xDeg, 0); // Dynamic Rotation
-		
+		Quaternion rotation = Quaternion.Euler (VerticalAngle + target.transform.rotation.eulerAngles.x,xDeg, 0); // Dynamic Rotation
+		CustomForwardVector = Quaternion.Euler (target.transform.rotation.eulerAngles.x,xDeg, 0) * Vector3.forward; // Dynamic Rotation
+
 		// Calculate the desired distance
-		if(enableZoom)
-			desiredDistance -= Input.GetAxis ("Mouse ScrollWheel") * Time.deltaTime * zoomRate * Mathf.Abs (desiredDistance);
+		if(enableZoom)desiredDistance -= Input.GetAxis ("Mouse ScrollWheel") * Time.deltaTime * zoomRate * Mathf.Abs (desiredDistance);
 		desiredDistance = Mathf.Clamp (desiredDistance, minDistance, maxDistance);
 		correctedDistance = desiredDistance;
 		
@@ -134,17 +134,19 @@ public class CameraSmoothFollow : MonoBehaviour {
 		Vector3 trueTargetPosition = new Vector3 (target.transform.position.x, target.transform.position.y + targetHeight, target.transform.position.z);
 		
 		// If there was a collision, correct the camera position and calculate the corrected distance
-		var isCorrected = false;
-		if (Physics.Linecast (trueTargetPosition, position, out collisionHit, collisionLayers))
+		bool isCorrected = false;
+		if(_targetMovement != null && !_targetMovement.inCyberSprintSurface)
 		{
-			// Calculate the distance from the original estimated position to the collision location,
-			// subtracting out a safety "offset" distance from the object we hit.  The offset will help
-			// keep the camera from being right on top of the surface we hit, which usually shows up as
-			// the surface geometry getting partially clipped by the camera's front clipping plane.
-			correctedDistance = Vector3.Distance (trueTargetPosition, collisionHit.point) - offsetFromWall;
-			isCorrected = true;
+			if (Physics.Linecast (trueTargetPosition, position, out collisionHit, collisionLayers))
+			{
+				// Calculate the distance from the original estimated position to the collision location,
+				// subtracting out a safety "offset" distance from the object we hit.  The offset will help
+				// keep the camera from being right on top of the surface we hit, which usually shows up as
+				// the surface geometry getting partially clipped by the camera's front clipping plane.
+				correctedDistance = Vector3.Distance (trueTargetPosition, collisionHit.point) - offsetFromWall;
+				isCorrected = true;
+			}
 		}
-		
 		// For smoothing, lerp distance only if either distance wasn't corrected, or correctedDistance is more than currentDistance
 		currentDistance = !isCorrected || correctedDistance > currentDistance ? Mathf.Lerp (currentDistance, correctedDistance, Time.deltaTime * zoomDampening) : 
 			Mathf.Lerp (currentDistance, correctedDistance, Time.deltaTime * zoomCollisionDampening);
@@ -156,7 +158,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 		position = target.transform.position - (rotation * Vector3.forward * currentDistance + vTargetOffset);
 		
 		//Finally Set rotation and position of camera
-		transform.rotation = rotation;
+		transform.localRotation = rotation;
 		transform.position = position;
 	}
 

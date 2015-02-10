@@ -82,7 +82,7 @@ public class InputController : MonoBehaviour {
 
 		// Get Movement Type Input
 		_walking	 = Input.GetKey (Walking);
-		_cyberSprint = Input.GetKey (CyberSprint) || Input.GetButton ("CyberSprint");
+		_cyberSprint = Input.GetKey (CyberSprint) || Input.GetAxisRaw ("CyberSprint") > 0;
 	}
 
 	

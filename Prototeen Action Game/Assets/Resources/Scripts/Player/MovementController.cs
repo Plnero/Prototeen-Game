@@ -60,6 +60,11 @@ public class MovementController : MonoBehaviour {
 			CheckCyberSprintFall(false);
 		}
 
+		// Debug 
+		Debug.DrawLine (transform.position, transform.position + _surfaceNormal,Color.red);
+		// Debug
+		Debug.DrawLine (transform.position, transform.position + _moveDirection , Color.blue);
+
 		// Execute the calculated movement
 		ExecuteMovement ();
 	}
@@ -79,8 +84,6 @@ public class MovementController : MonoBehaviour {
 		// Reset movement variable
 		_moveDirection = Vector3.zero;
 	}
-
-	private bool key = false;
 
 	/// <summary>
 	/// Checks the cyber sprint.
@@ -102,10 +105,6 @@ public class MovementController : MonoBehaviour {
 			if(_hit.collider.gameObject.GetComponent<CyberSprintSurface>() && 
 			   Vector3.Angle(_hit.normal,transform.forward) > AngleThreshold)
 			{
-				// Debug
-				Debug.Log("CYBERSPRINT SURFACE, COLLSION ANGLE: " + Vector3.Angle(_hit.normal,transform.forward));
-				key = true;
-				
 				// Set new surface normal
 				_surfaceNormal = _hit.normal.normalized;
 				
@@ -155,11 +154,8 @@ public class MovementController : MonoBehaviour {
 	/// <param name="movementInput">Movement input.</param>
 	public void TryMovement(Vector2 movementInput,bool walking,bool CyberSprint = false)
 	{
-
 		// Forward vector relative to the camera along the x-z plane	
-		Vector3 forward = Camera.main.transform.TransformDirection(Vector3.forward);
-		forward.y = 0;
-		forward = forward.normalized;
+		Vector3 forward = CameraSmoothFollow.Instance.CustomForwardVector.normalized;
 
 		// Right vector relative to the camera
 		// Always orthogonal to the forward vector
@@ -168,6 +164,7 @@ public class MovementController : MonoBehaviour {
 		// Target direction relative to the camera
 		_moveDirection = movementInput.x * right + movementInput.y * forward;
 
+
 		// Get Current movement speed
 		_currentMovementSpeed = CyberSprint ? CyberSprintSpeedMultiplier * runSpeed: 
 								walking ? walkSpeed : runSpeed;
@@ -175,14 +172,11 @@ public class MovementController : MonoBehaviour {
 		// Check for cyber sprint
 		CheckCyberSprint (_moveDirection,CyberSprint);
 
-		// DEBUG
-		if(key)	{_moveDirection = Vector3.zero;return;}
-
 		// Add movement speed
 		_moveDirection *= _currentMovementSpeed ;
 
 		// Rotate towards movement direction
-		transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(_moveDirection),rotateSpeed * Time.deltaTime);
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(_moveDirection,_surfaceNormal),rotateSpeed * Time.deltaTime);
 	}
 
 	
@@ -208,9 +202,6 @@ public class MovementController : MonoBehaviour {
 		// Remove Cyber Sprint Flag
 		inCyberSprintSurface = false;
 		_waitingToFall = false;
-		
-		// Debug
-		key = false;
 	}
 
 }
